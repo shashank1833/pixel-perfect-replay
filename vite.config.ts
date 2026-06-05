@@ -12,4 +12,10 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    server: {
+      // Allow the public preview host (and any *.emergentagent.com) through Vite's host check.
+      allowedHosts: true,
+    },
+  },
 });
