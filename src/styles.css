@@ -151,5 +151,48 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-body);
+    overflow-x: hidden;
   }
+}
+
+@utility font-hand {
+  font-family: var(--font-hand);
+}
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes float-y-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-22px) rotate(2deg); }
+}
+@keyframes shimmer-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+@keyframes marquee-x {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes voice-bar {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+@utility animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+@utility animate-float-slow {
+  animation: float-y-slow 9s ease-in-out infinite;
+}
+@utility animate-tap-pulse {
+  animation: shimmer-pulse 2.2s ease-in-out infinite;
+}
+@utility animate-marquee {
+  animation: marquee-x 18s linear infinite;
 }
