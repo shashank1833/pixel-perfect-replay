@@ -20,6 +20,8 @@ import bouquet from "@/assets/bouquet.jpg";
 import memory1 from "@/assets/memory1.jpg";
 import memory2 from "@/assets/memory2.jpg";
 import memory3 from "@/assets/memory3.jpg";
+import memory4 from "@/assets/memory4.jpg";
+import memory5 from "@/assets/memory5.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -534,8 +536,8 @@ function ScrapbookScene({ onNext }: { onNext: () => void }) {
     { src: memory1, rot: -7, cap: "that afternoon", top: "6%", left: "4%" },
     { src: memory2, rot: 5, cap: "us, laughing", top: "2%", left: "38%" },
     { src: memory3, rot: 8, cap: "golden hour", top: "10%", left: "70%" },
-    { src: memory2, rot: -5, cap: "little things", top: "48%", left: "16%" },
-    { src: memory1, rot: 6, cap: "always you", top: "44%", left: "56%" },
+    { src: memory4, rot: -5, cap: "little things", top: "48%", left: "16%" },
+    { src: memory5, rot: 6, cap: "always you", top: "44%", left: "56%" },
   ];
 
   return (
@@ -562,7 +564,7 @@ function ScrapbookScene({ onNext }: { onNext: () => void }) {
 
       {/* Mobile column */}
       <div className="mt-9 flex w-full max-w-sm flex-col items-center gap-7 sm:hidden">
-        {photos.slice(0, 4).map((p, i) => (
+        {photos.map((p, i) => (
           <div
             key={i}
             className="reveal-pop polaroid w-52"
