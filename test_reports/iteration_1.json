@@ -1,0 +1,51 @@
+{
+  "summary": "Frontend-only E2E test of the romantic interactive birthday-card single-page experience (TanStack-Start + Vite + React). Walked through every stage of the state machine (sealed → intro → menu → message/flower/cake → scrapbook → music → final → replay) on desktop (1440x820) and mobile (390x844). All scenes render, all data-testid buttons exist and are clickable, scene transitions work, back navigation works, cake-wish toggles the flame off and shows 'Wish made', the custom AudioPlayer exposes all required controls (play disabled until upload, mute clickable, title default 'Our Song'), menu-skip jumps to scrapbook, replay returns to sealed, no Instagram references anywhere, and mobile has no horizontal overflow with gift cards stacking vertically.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "OPTIONAL/MINOR: Spec in the review_request states gift testids should be 'gift-Letter', 'gift-Flowers', 'gift-A' (derived from labels 'A letter','Flowers','A cake'). Actual implementation in src/routes/index.tsx line 341 uses `g.label.split(' ')[1] ?? g.label`, producing 'gift-letter' (lowercase), 'gift-Flowers', 'gift-cake'. Functionally correct (all 3 cards are clickable & open correct scenes) but the data-testid naming contract diverges from the spec. If external automation relies on the spec-named ids, align them (e.g., use first word with original casing or hard-code the contract).",
+    "OPTIONAL: SealedScene uses a 1500ms setTimeout before advancing to intro; combined with AnimatePresence exit (~400ms) the transition takes ~1.9s. Not a bug, but slow-feeling. Consider shortening to ~900ms for snappier UX."
+  ],
+  "critical_code_review_comments": [
+    "data-testid for gift cards is derived dynamically from label text and does not match the testid contract in the review_request (see action item above).",
+    "AudioPlayer defaults src to /audio/birthday-song.mp3 which does not exist in /public/audio (only README.md). This is expected per spec — play button correctly disables until upload. Confirmed working as designed.",
+    "Vite dev server's host check blocks the public preview URL (returns 403 from Cloudflare and from a Host-header bypass). The app currently is only reachable on localhost:3000 inside the container. If end users need to access the preview URL, vite config needs `server.allowedHosts` to include the preview host. Tested via localhost only.",
+    "src/routes/index.tsx is 650 lines and contains 9 scene components. Consider splitting into per-scene files under src/routes/scenes/ for maintainability (>700-line guideline)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "100% (34/34 functional checks passed)"},
+  "test_credentials": "None required",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "App is frontend-only, served via Vite dev on port 3000. The Emergent preview URL is BLOCKED by Vite's host check (403). Test via http://localhost:3000/ from within the container. Backend supervisor program is FATAL by design (no /app/backend dir) — ignore it. All 11 review_request features verified working. The single transient 'Did not reach Intro' message in the first test run was a timing flake (sample taken ~100ms after stage flip while CSS reveal was still in animation delay); the subsequent wait_for_selector confirmed intro-continue was present and the full flow succeeded.",
+  "tested_flows": [
+    "Sealed scene loads with 'Happy Birthday' heading + envelope + 'Tap the seal to open' hint — PASS",
+    "open-envelope click triggers open animation and advances to Intro after 1.5s — PASS",
+    "Intro shows 'Happy Birthday, My Love' + polaroid; intro-continue advances to Menu — PASS",
+    "Menu titled 'These are for you' with 3 gift cards present — PASS",
+    "gift-letter opens Message scene with 'A little letter' + 'Always yours' — PASS",
+    "gift-Flowers opens bouquet scene with affirmation notes ('Just for you') — PASS",
+    "gift-cake opens 'Make a wish' scene — PASS",
+    "back-button in message/flower/cake returns to Menu — PASS",
+    "cake-wish click hides flame and shows 'Wish made' message — PASS",
+    "message-continue, flower-continue, cake-continue all advance to Scrapbook — PASS",
+    "menu-skip jumps directly to Scrapbook — PASS",
+    "scrapbook-continue advances to Music — PASS",
+    "AudioPlayer has audio-play-toggle (disabled, expected), audio-mute-toggle (clickable), audio-upload-input, audio-progress-bar, audio-title-input (default 'Our Song'), audio-artist-input — PASS",
+    "music-continue advances to Final scene — PASS",
+    "Final scene shows confetti, heart, 'Happy Birthday', emotional message — PASS",
+    "replay-button returns to Sealed scene — PASS",
+    "No 'instagram' substring anywhere in rendered text — PASS",
+    "Mobile 390px: no horizontal overflow on sealed/menu/message/scrapbook/music/final — PASS",
+    "Mobile: gift cards stack vertically (y-offsets 208/430/654) — PASS"
+  ]
+}
